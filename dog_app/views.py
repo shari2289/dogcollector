@@ -1,5 +1,21 @@
-from django.shortcuts import render
-from .models import Dog
+
+from django.shortcuts import render, redirect
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView
+from .models import Dog, Toy
+from .forms import FeedingForm
+
+class DogCreate(CreateView):
+    model = Dog
+    fields = '__all__' 
+
+class DogUpdate(UpdateView):
+    model = Dog
+    fields = ['breed', 'size', 'color', 'chracteristics', 'age']
+
+class DogDelete(DeleteView):
+    model = Dog
+    success_url = '/dogs/'        
 
 
 def home(request):
@@ -14,4 +30,33 @@ def dogs_index(request):
 
 def dogs_detail(request, dog_id):
   dog = Dog.objects.get(id=dog_id)
-  return render(request, 'dogs/detail.html', { 'dog': dog })
+  feeding_form = FeedingForm()
+  return render(request, 'dogs/detail.html', {
+    'dog': dog, 'feeding_form': feeding_form
+  })
+
+def add_feeding(request, dog_id):
+  form = FeedingForm(request.POST)
+  if form.is_valid():
+    new_feeding = form.save(commit=False)
+    new_feeding.dog_id = dog_id
+    new_feeding.save()
+  return redirect('detail', dog_id=dog_id)
+
+class ToyList(ListView):
+  model = Toy
+
+class ToyDetail(DetailView):
+  model = Toy
+
+class ToyCreate(CreateView):
+  model = Toy
+  fields = '__all__'
+
+class ToyUpdate(UpdateView):
+  model = Toy
+  fields = ['name', 'color']
+
+class ToyDelete(DeleteView):
+  model = Toy
+  success_url = '/toys/'
