@@ -36,7 +36,10 @@
     {% endif %}
     <table class="striped">
       <thead>
-        <tr><th>Date</th><th>Meal</th></tr>
+      <tr>
+        <th>Date</th>
+        <th>Meal</th>
+      </tr>
       </thead>
       <tbody>
         {% for feeding in dog.feeding_set.all %}
