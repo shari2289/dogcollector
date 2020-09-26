@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from datetime import date
 
 # Create your models here.
 MEALS = (
@@ -24,6 +25,7 @@ class Dog(models.Model):
     color = models.CharField(max_length=100)
     characteristics = models.TextField(max_length=250)
     age = models.IntegerField()
+    toys = models.ManyToManyField(Toy)
 
     def __str__(self):
         return self.name
@@ -36,11 +38,7 @@ class Dog(models.Model):
 
 class Feeding(models.Model):
   date = models.DateField('feeding date')
-  meal = models.CharField(
-    max_length=1,
-    choices=MEALS,
-    default=MEALS[0][0]
-  )
+  meal = models.CharField(max_length=1, choices=MEALS, default=MEALS[1][0])
   dog = models.ForeignKey(Dog, on_delete=models.CASCADE)
 
   def __str__(self):
